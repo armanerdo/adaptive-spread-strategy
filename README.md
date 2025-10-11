@@ -31,12 +31,13 @@ The goal is to achieve repeatable alpha under realistic financing and execution 
 
 ## 📊 Core Results
 
-| Scenario | End Cap (₺M) | CAGR (%) | Vol (%) | Sharpe | Sharpeα | Max DD (%) | Comment |
-|-----------|---------------|-----------|----------|---------|-----------|-------------|
-| **base_run** | 6.33 | 44.7 | 15.2 | 2.51 | 1.11 | −24.6 | Balanced profile |
-| exit_tight | 5.72 | 41.8 | 16.1 | 2.25 | 0.95 | −19.1 | Lower DD |
-| zscale_fixed | 6.16 | 43.9 | 13.0 | 2.92 | 1.18 | −20.9 | Highest Sharpe |
-| zscale_wide | 6.49 | 45.5 | 16.2 | 2.42 | 1.07 | −26.4 | Highest CAGR |
+| Scenario       | End Cap (₺M) | CAGR (%) | Vol (%) | Sharpe | Sharpeα | Max DD (%) | Comment          |
+|----------------|---------------|-----------|----------|---------|-----------|-------------|------------------|
+| **base_run**   | 6.33          | 44.7      | 15.2     | 2.51    | 1.11      | −24.6       | Balanced profile |
+| exit_tight     | 5.72          | 41.8      | 16.1     | 2.25    | 0.95      | −19.1       | Lower DD         |
+| zscale_fixed   | 6.16          | 43.9      | 13.0     | 2.92    | 1.18      | −20.9       | Highest Sharpe   |
+| zscale_wide    | 6.49          | 45.5      | 16.2     | 2.42    | 1.07      | −26.4       | Highest CAGR     |
+
 
 ---
 
@@ -71,3 +72,4 @@ python walkforward_pair_selection.py
 python batch_run_scenarios.py
 python rebuild_run_comparison.py
 python generate_core_plots.py
+
