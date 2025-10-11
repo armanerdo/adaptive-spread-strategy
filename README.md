@@ -3,7 +3,7 @@
 **Author:** Arman Erdogan  
 **Backtest Period:** 2020–2024  
 **Environment:** Python (pandas, numpy, matplotlib, scikit-learn, joblib)  
-**Full Report:** [`docs/Pair_Trade_Report.pdf`](docs/Pair_Trade_Report.pdf)
+**Full Report:** [`Pair_Trade_Report.pdf`](Pair_Trade_Report.pdf)
 
 ---
 
@@ -72,4 +72,5 @@ python walkforward_pair_selection.py
 python batch_run_scenarios.py
 python rebuild_run_comparison.py
 python generate_core_plots.py
+
 
