@@ -5,18 +5,6 @@ Created on Thu Oct  9 16:45:56 2025
 @author: arman
 """
 
-# simulate_portfolio_pb_zmag.py
-# -----------------------------
-# Portfolio simulator (Prime Broker varsayımları) + Z-score magnitude scaling
-#
-# - Yıl-bazlı walk-forward: Y yılı pair listesi, sadece Y yılına GİREN işlemleri açar (leakage yok)
-# - Sizing: fraction-of-capital * z_scale  (z_scale = clamp(|EntryZ| / base_z, [zscale_min, zscale_max]))
-# - Costs: komisyon + slippage (roundtrip)
-# - Financing (PB): long nakitten, short margin+collateral, idle cash faizi, short borrow & rebate
-# - Çıktılar: capital_curve.csv + trade_log_zmag.csv (opsiyonel kaydetme)
-#
-# EntryZ kolonu isimleri için tolerant: "EntryZ", "Entry Z", "ZEntry", "z_entry"
-
 from __future__ import annotations
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -25,9 +13,6 @@ import pandas as pd
 import numpy as np
 
 from adaptive_spread_strategy_fixed import compute_rolling_spread, CONFIG as STRAT_DEFAULT
-
-
-
 
 TRADING_DAYS_CAL = 365
 
@@ -63,16 +48,10 @@ def _cash_required_for_gross(gross_open: float, short_margin: float, offset_frac
     return max(0.0, base_req - offset)
 
 def _extract_entry_z_cols(df: pd.DataFrame) -> pd.Series:
-    """
-    Ticaret dataframe'indeki Entry Z skorunu toleranslı şekilde yakalar.
-    Varsa şu isimlerden birini kullanır: ["EntryZ","Entry Z","ZEntry","z_entry"].
-    Bulamazsa NaN döner (sonra scaling fallback = 1.0).
-    """
     candidates = ["EntryZ", "Entry Z", "ZEntry", "z_entry"]
     for c in candidates:
         if c in df.columns:
             return pd.to_numeric(df[c], errors="coerce")
-    # entry timestamp'ına yakın sinyal serisini hesaplamıyoruz; sadece fallback:
     return pd.Series(np.nan, index=df.index)
 
 # ---------- core ----------
@@ -98,9 +77,9 @@ def simulate_portfolio(config: dict, timeout: int = 60) -> tuple[pd.DataFrame, p
     target_util = float(sizing.get("target_util", 0.98))
     min_alloc   = float(sizing.get("min_alloc", 75_000.0))
     max_pos     = int(config.get("max_open_positions", 24))
-    base_z      = float(sizing.get("base_z", 1.5))        # entry threshold referansı
-    zmin        = float(sizing.get("zscale_min", 0.5))    # alt sınır (çok küçülmesin)
-    zmax        = float(sizing.get("zscale_max", 2.0))    # üst sınır (çok büyümesin)
+    base_z      = float(sizing.get("base_z", 1.5))    
+    zmin        = float(sizing.get("zscale_min", 0.5))   
+    zmax        = float(sizing.get("zscale_max", 2.0))  
 
     # 1) Trade collection (year-aware, no lookahead)
     trades_df = config.get("trades_df")
@@ -326,3 +305,4 @@ if __name__ == "__main__":
     }
 
     simulate_portfolio(CONFIG, timeout=60)
+
