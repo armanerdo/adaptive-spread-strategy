@@ -31,8 +31,6 @@ for ticker in tickers:
     print(f"[FETCH] {yahoo_ticker}")
 
     try:
-        # yfinance >=0.2.66 default auto_adjust=True
-        # Bu yüzden "Close" zaten adj close
         df = yf.download(yahoo_ticker, start=START_DATE, end=END_DATE, progress=False)
         if df.empty:
             print(f"❌ No data for {ticker}")
@@ -40,7 +38,7 @@ for ticker in tickers:
 
         df.index.name = "Date"
 
-        # OHLCV + Close kaydet
+        
         out_path = os.path.join(OUT_FOLDER, f"{ticker}.parquet")
         df.to_parquet(out_path)
         print(f"✅ Saved {out_path}")
@@ -51,10 +49,11 @@ for ticker in tickers:
     except Exception as e:
         print(f"⚠️ Error fetching {ticker}: {e}")
 
-# === topluca CSV ===
+
 if all_data:
     adj_df = pd.concat(all_data, axis=1)
     adj_df.to_csv(os.path.join(OUT_FOLDER, "adj_close_all.csv"))
     print("✅ All adjusted close data saved.")
 else:
     print("❌ No data fetched. Check ticker list or internet connection.")
+
