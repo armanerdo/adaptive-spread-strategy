@@ -5,11 +5,6 @@ Created on Sat Oct 11 00:27:24 2025
 @author: arman
 """
 
-# ===============================================
-# generate_core_plots.py
-# Creates core visuals for Adaptive Spread Strategy report
-# ===============================================
-
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -80,4 +75,5 @@ plt.savefig(os.path.join(PLOT_DIR, "annual_returns.png"), dpi=250)
 
 
 print(f"✅ Core plots saved to: {PLOT_DIR}")
+
 
