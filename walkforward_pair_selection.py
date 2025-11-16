@@ -1,21 +1,4 @@
 
-# design_and_build_wf_pairs.py (CAUSAL ROLLING)
-# ---------------------------------------------
-# Walk-forward pair selection with STRICTLY CAUSAL priors and ban list.
-# For each year Y, we ONLY use trades whose Entry Time is before Y-01-01
-# and within a 2-year lookback window to:
-#   - compute per-pair EMA mean/std → Quality Score (QS)
-#   - compute a per-year ban list from bottom-quantile SharpeLike
-#   - compute per-year priors (same-sector tilt, sector-pair whitelist)
-# Then we rank by QS (+ small prior boosts) and take TOP_N pairs.
-#
-# Usage: python design_and_build_wf_pairs.py
-# Outputs: wf_pairs_YYYY.csv in OUT_DIR + ban_list_YYYY.csv (for audit).
-
-# walkforward_pair_selection.py — Pair_Trade için güncel sürüm
-# Causal (lookback 2 yıl) walk-forward pair selection
-# Input : data/trade_data/all_trades.parquet
-# Output: data/wf_pairs/wf_pairs_YYYY.csv ve ban_list_YYYY.csv
 
 import os, math
 import pandas as pd, numpy as np
