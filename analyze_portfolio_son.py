@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 """
 Final Analysis Module — Pair Trading Project
 --------------------------------------------
@@ -265,11 +265,12 @@ def compare_runs(run_folders: list[str]) -> pd.DataFrame:
     return df
 
 
-# ===== Example Usage =====
+
 if __name__ == "__main__":
     os.chdir(r"C:\QuantProjects\Pair_Trade")
     metrics = analyze_portfolio(run_folder="outputs", save_plots=True)
     print(metrics)
     # compare_runs(["outputs/base_run", "outputs/strict_z", "outputs/zscale_tight"])
+
 
 
