@@ -5,16 +5,6 @@ Created on Fri Oct 10 00:33:27 2025
 @author: arman
 """
 
-# -*- coding: utf-8 -*-
-"""
-Clean fixed version — removes bfill leakage and safe date filtering
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Fusion version — rolling_2 data handling + adaptive logic
-"""
-
 import os
 import pandas as pd
 import numpy as np
@@ -214,3 +204,4 @@ if __name__ == "__main__":
     df, trades = compute_rolling_spread(pair, CONFIG, timeout=60)
     print("\n📊 Sample Trades")
     print(trades.head())
+
