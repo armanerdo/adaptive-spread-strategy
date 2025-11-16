@@ -6,23 +6,15 @@ Created on Mon Sep 29 16:54:29 2025
 """
 
 
-# generate_all_trades.py — core universe (XU030/XU100 hariç), tek sefer güvenli run
-#  - data/daily altındaki tüm hisselerden (XU030, XU100 hariç) pair oluşturur
-#  - her pair için trade üretir (entry_z=1.5, exit_z=0.5, confirm_bars=2, timeout=60)
-#  - sadece 2018-01-01 ile 2023-12-31 arasında AÇILAN işlemleri tutar (Entry Time filtresi)
-#  - chunk'lara yazar, sonunda tek dosyada birleştirir: data/trade_data/all_trades.parquet
-
 import os
 import sys
 import uuid
 from itertools import combinations
 import pandas as pd
 
-# --- yerel importlar çalışsın ---
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from adaptive_spread_strategy import compute_rolling_spread, CONFIG as STRAT_DEFAULT  # noqa: E402
 
-# --- klasörler ---
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 DAILY_DIR  = os.path.join(BASE_DIR, "data", "daily")
 TRADE_DIR  = os.path.join(BASE_DIR, "data", "trade_data")
@@ -32,25 +24,21 @@ OUTPUT_FILE = os.path.join(TRADE_DIR, "all_trades.parquet")
 TMP_DIR     = os.path.join(TRADE_DIR, "_tmp_chunks")
 os.makedirs(TMP_DIR, exist_ok=True)
 
-# --- tarih penceresi (WF: 2020–2024 için gerekli geçmiş) ---
 DATE_START = pd.Timestamp("2018-01-01")
-DATE_END   = pd.Timestamp("2023-12-31")  # 2024'te açılan işlemler dahil edilmez
+DATE_END   = pd.Timestamp("2023-12-31") 
 
-# --- strateji parametreleri (safe, tutarlı) ---
 STRATEGY_CONFIG = {
-    **STRAT_DEFAULT,      # data_folder vs. burada tanımlı
+    **STRAT_DEFAULT,     
     "entry_z": 1.5,
     "exit_z": 0.5,
     "confirm_bars": 2,
 }
 TIMEOUT_BARS = 60
 
-# --- performans/hata kontrolleri ---
 CHUNK_SIZE = 75       # her 75 pair'de bir diske yaz
 MAX_ERRORS = 150
 
 def list_universe():
-    """daily klasöründen ticker listesi üret, XU030/XU100'u hariç tut."""
     files = [f for f in os.listdir(DAILY_DIR) if f.endswith(".parquet")]
     tickers = sorted([f[:-8] for f in files])  # strip ".parquet"
     tickers = [t for t in tickers if t not in {"XU030", "XU100"}]
@@ -59,7 +47,6 @@ def list_universe():
     return tickers
 
 def flush_buffer(buf, chunk_idx):
-    """Buffer'daki trades DF'lerini tek DF yapıp temp'e yazar."""
     if not buf:
         return None
     df = pd.concat(buf, ignore_index=True)
@@ -76,7 +63,6 @@ def flush_buffer(buf, chunk_idx):
     return tmp_path
 
 def combine_chunks(out_file):
-    """TMP_DIR altındaki tüm chunk'ları tek dosyada birleştirir."""
     parts = []
     files = sorted([f for f in os.listdir(TMP_DIR) if f.endswith(".parquet")])
     total = 0
@@ -126,7 +112,6 @@ def main():
                 print(f"... {k}/{len(pairs)} pair işlendi (boş trade).")
             continue
 
-        # --- tarih filtresi (sadece Entry bazlı zorunlu, Exit opsiyonel) ---
         trades = trades.copy()
         trades["Entry Time"] = pd.to_datetime(trades["Entry Time"])
         trades["Exit Time"]  = pd.to_datetime(trades["Exit Time"])
@@ -158,3 +143,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
