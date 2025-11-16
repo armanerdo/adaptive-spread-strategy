@@ -5,21 +5,13 @@ Created on Fri Oct 10 17:48:40 2025
 @author: arman
 """
 
-# -*- coding: utf-8 -*-
-"""
-Rebuild run_comparison.csv from existing scenario outputs
-(No re-simulation needed)
-"""
-
 import os
 import sys
 import pandas as pd
 
-# === Paths ===
 BASE_DIR = r"C:\QuantProjects\Pair_Trade"
 OUTPUT_BASE = os.path.join(BASE_DIR, "outputs")
 
-# make sure local modules are importable
 sys.path.append(BASE_DIR)
 
 from analyze_portfolio_son import analyze_portfolio
@@ -60,3 +52,4 @@ if results:
         print(df[available].sort_values("Sharpe", ascending=False).to_string(index=False))
 else:
     print("⚠️ No valid runs found.")
+
